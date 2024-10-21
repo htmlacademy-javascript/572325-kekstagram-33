@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Леонид Козинский](https://up.htmlacademy.ru/javascript/33/user/572325).
-* Наставник: `Неизвестно`.
+* Наставник: [Артём Именин](https://htmlacademy.ru/profile/aimenin).
 
 ---
 
