@@ -16,33 +16,31 @@ const commentMessages = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 const userNames = ['Леонид', 'Рамиль', 'Артём', 'Иван', 'Родион', 'Николай', 'Алексей', 'Богдан'];
+let idCounter = 0;
+const commentsUsedIds = [];
 
-const getPhotos = (count) => {
-  let idCounter = 0;
-  const commentsUsedIds = [];
-  function createPhotoItem () {
-    function getComment () {
-      let commentId = Math.random();
-      while (commentsUsedIds.includes(commentId)) {
-        commentId = Math.random();
-      }
-      commentsUsedIds.push(commentId);
-      return {
-        id: (commentId * 1000).toFixed(),
-        avatar: `img/avatar-${getRandomNumber(1, 6)}.svg`,
-        message: getRandomArrayElem(commentMessages),
-        name: getRandomArrayElem(userNames)
-      };
-    }
-    return {
-      id: ++idCounter,
-      url: `photos/${idCounter}.jpg`,
-      description: 'Здесь должно быть описание',
-      likes: getRandomNumber(15, 200),
-      comments: Array.from({length: getRandomNumber(0, 30)}, getComment)
-    };
+const getComment = () => {
+  let commentId = Math.random();
+  while (commentsUsedIds.includes(commentId)) {
+    commentId = Math.random();
   }
-  return Array.from({length: count}, createPhotoItem);
+  commentsUsedIds.push(commentId);
+  return {
+    id: (commentId * 1000).toFixed(),
+    avatar: `img/avatar-${getRandomNumber(1, 6)}.svg`,
+    message: getRandomArrayElem(commentMessages),
+    name: getRandomArrayElem(userNames)
+  };
 };
+
+const createPhotoItem = () => ({
+  id: ++idCounter,
+  url: `photos/${idCounter}.jpg`,
+  description: 'Здесь должно быть описание',
+  likes: getRandomNumber(15, 200),
+  comments: Array.from({length: getRandomNumber(0, 30)}, getComment)
+});
+
+const getPhotos = (count) => Array.from({length: count}, createPhotoItem);
 
 getPhotos(25);
