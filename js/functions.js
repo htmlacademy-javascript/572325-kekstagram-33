@@ -1,7 +1,7 @@
 // проверка длины строки
 
-const checkStrLength = (str, maxLength) => ((str.length <= maxLength));
-console.log(checkStrLength('asdfgh', 5)); //false
+const checkStrLength = (str, maxLength) => !(str.length > maxLength);
+checkStrLength('йцукен', 6);
 
 //проверка на палиндром
 
@@ -13,5 +13,4 @@ const isPalindrome = (str) => {
   }
   return (strReverse === strReady);
 };
-console.log(isPalindrome('Лёша на полке клопа нашёл')); //true
-console.log(isPalindrome('Лёша на полке клопа не нашёл')); //false
+isPalindrome('Лёша на полке клопа нашёл');
