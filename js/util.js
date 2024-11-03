@@ -7,4 +7,9 @@ const getRandomNumber = (min, max) => {
 
 const getRandomArrayElem = (arr) => arr[getRandomNumber(0, arr.length - 1)];
 
-export {getRandomNumber, getRandomArrayElem};
+const idGenerator = () => {
+  let idCounter = 0;
+  return () => ++idCounter;
+};
+
+export {getRandomNumber, getRandomArrayElem, idGenerator};

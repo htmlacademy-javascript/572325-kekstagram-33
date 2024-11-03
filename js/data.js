@@ -1,4 +1,4 @@
-import {getRandomNumber, getRandomArrayElem} from './util.js';
+import {getRandomNumber, getRandomArrayElem, idGenerator} from './util.js';
 
 const COMMENT_MESSAGES = [
   'Всё отлично!',
@@ -11,30 +11,26 @@ const COMMENT_MESSAGES = [
 const USER_NAMES = ['Леонид', 'Рамиль', 'Артём', 'Иван', 'Родион', 'Николай', 'Алексей', 'Богдан'];
 const PHOTOS_COUNT = 25;
 
-let idCounter = 0;
-const commentsUsedIds = [];
+const commentId = idGenerator();
+const photoId = idGenerator();
 
-const getComment = () => {
-  let commentId = Math.random();
-  while (commentsUsedIds.includes(commentId)) {
-    commentId = Math.random();
-  }
-  commentsUsedIds.push(commentId);
+const getComment = () => ({
+  id: commentId(),
+  avatar: `img/avatar-${getRandomNumber(1, 6)}.svg`,
+  message: getRandomArrayElem(COMMENT_MESSAGES),
+  name: getRandomArrayElem(USER_NAMES)
+});
+
+const createPhotoItem = () => {
+  const currentPhotoId = photoId();
   return {
-    id: (commentId * 1000).toFixed(),
-    avatar: `img/avatar-${getRandomNumber(1, 6)}.svg`,
-    message: getRandomArrayElem(COMMENT_MESSAGES),
-    name: getRandomArrayElem(USER_NAMES)
+    id: currentPhotoId,
+    url: `photos/${currentPhotoId}.jpg`,
+    description: 'Здесь должно быть описание',
+    likes: getRandomNumber(15, 200),
+    comments: Array.from({length: getRandomNumber(0, 30)}, getComment)
   };
 };
-
-const createPhotoItem = () => ({
-  id: ++idCounter,
-  url: `photos/${idCounter}.jpg`,
-  description: 'Здесь должно быть описание',
-  likes: getRandomNumber(15, 200),
-  comments: Array.from({length: getRandomNumber(0, 30)}, getComment)
-});
 
 const getPhotos = () => Array.from({length: PHOTOS_COUNT}, createPhotoItem);
 
