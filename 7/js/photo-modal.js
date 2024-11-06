@@ -19,7 +19,8 @@ const openPhotoModal = (evt) => {
     bigPict.querySelector('.social__comment-total-count').textContent = commentTotalCount;
     const commentShownCount = (commentTotalCount < 5) ? commentTotalCount : 5;
     bigPict.querySelector('.social__comment-shown-count').textContent = commentShownCount;
-    const id = target.pathname.slice(8, -4);
+    const indexForSlice = target.href.lastIndexOf('/');
+    const id = target.href.slice(indexForSlice + 1, -4);
     for (let i = 0; i < commentShownCount; i++) {
       const insert = `<li class="social__comment"><img class="social__picture"
         src="${photosData[id].comments[i].avatar}"
