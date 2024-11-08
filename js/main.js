@@ -1,1 +1,2 @@
-// точка входа
+import './thumbnails.js';
+import './photo-modal.js';
