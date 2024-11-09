@@ -1,4 +1,5 @@
 import {miniPicturesContainer, photosData} from './thumbnails.js';
+import {isEscapeKey} from './util.js';
 
 const bigPict = document.querySelector('.big-picture');
 const COMMENTS_LIMIT = 5;
@@ -7,6 +8,13 @@ const closePhotoModal = () => {
   bigPict.classList.add('hidden');
   bigPict.querySelector('.social__comments').innerHTML = '';
   document.body.classList.remove('modal-open');
+};
+
+const onDocumentKeydown = (evt) => {
+  if (isEscapeKey) {
+    evt.preventDefault();
+    closePhotoModal();
+  }
 };
 
 const openPhotoModal = (evt) => {
@@ -32,8 +40,9 @@ const openPhotoModal = (evt) => {
       bigPict.querySelector('.social__comments').insertAdjacentHTML('afterBegin', insert);
     }
     document.body.classList.add('modal-open');
-    bigPict.querySelector('#picture-cancel').addEventListener('click', closePhotoModal);
+    document.addEventListener('keydown', onDocumentKeydown);
   }
 };
 
+bigPict.querySelector('#picture-cancel').addEventListener('click', closePhotoModal);
 miniPicturesContainer.addEventListener('click', openPhotoModal);
