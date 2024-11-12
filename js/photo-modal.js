@@ -38,6 +38,20 @@ const renderComments = (count, photoObj, start = 0) => {
   }
 };
 
+const loadComments = (total, shown, photoObj, shownCountElem) => {
+  if (total - shown >= COMMENTS_LIMIT) {
+    shown += COMMENTS_LIMIT;
+    renderComments(shown, photoObj, shown - COMMENTS_LIMIT);
+  } else if (total > shown) {
+    renderComments(shown, photoObj, total - 1);
+    shown = total;
+  }
+  shownCountElem.textContent = shown;
+  hideCommentsLoader(shown, total);
+};
+
+loadCommentsBtn.addEventListener('click', loadComments);
+
 const openPhotoModal = (evt) => {
   evt.preventDefault();
   if (evt.target.closest('.picture')) {
@@ -56,25 +70,11 @@ const openPhotoModal = (evt) => {
     renderComments(commentShownCount, photo);
     document.body.classList.add('modal-open');
     document.addEventListener('keydown', onDocumentKeydown);
-
     // const loadCommentsCallback = () => loadComments(photo.comments.length, commentShownCount, photo, queriedElements[2]);
-    // loadCommentsBtn.addEventListener('click', loadCommentsCallback);
   }
 };
 
 miniPicturesContainer.addEventListener('click', openPhotoModal);
-
-// const loadComments = (total, shown, photoObj, shownCountElem) => {
-//   if (total - shown >= COMMENTS_LIMIT) {
-//     shown += COMMENTS_LIMIT;
-//     renderComments(shown, photoObj, shown - COMMENTS_LIMIT);
-//   } else if (total > shown) {
-//     renderComments(shown, photoObj, total - 1);
-//     shown = total;
-//   }
-//   shownCountElem.textContent = shown;
-//   hideCommentsLoader(shown, total);
-// };
 
 // function closePhotoModal () {
 //   bigPict.classList.add('hidden');
