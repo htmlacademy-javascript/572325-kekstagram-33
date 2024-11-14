@@ -7,14 +7,15 @@ const textSelectors = ['.likes-count', '.social__comment-total-count', '.social_
 const queriedElements = textSelectors.map((v) => bigPict.querySelector(v));
 const COMMENTS_LIMIT = 5;
 
-const closePhotoModal = () => {
+const closePhotoModal = (callback) => {
   bigPict.classList.add('hidden');
   bigPict.querySelector('.social__comments').innerHTML = '';
   document.body.classList.remove('modal-open');
   loadCommentsBtn.classList.remove('hidden');
+  loadCommentsBtn.removeEventListener('click', callback);
 };
-
-bigPict.querySelector('#picture-cancel').addEventListener('click', closePhotoModal);
+const closePhotoModalCallback = () => closePhotoModal(loadCommentsCallback);
+bigPict.querySelector('#picture-cancel').addEventListener('click', closePhotoModalCallback);
 
 const onDocumentKeydown = (event) => {
   if (isEscapeKey(event)) {
@@ -60,9 +61,6 @@ const openPhotoModal = (evt) => {
       if (total - shown >= COMMENTS_LIMIT) {
         shown += COMMENTS_LIMIT;
         renderComments(shown, photoObj, shown - COMMENTS_LIMIT);
-        if (shown < total) { //если нет этого условия то при уравнивании shown и total при следующем открытии модального окна накопятся 2 обработчика
-          loadCommentsBtn.addEventListener('click', loadCommentsCallback, {once: true});
-        }
       } else if (total > shown) {
         renderComments(total, photoObj, shown);
         shown = total;
@@ -72,10 +70,8 @@ const openPhotoModal = (evt) => {
       commentShownCount = shown;
       return commentShownCount;
     };
-    function loadCommentsCallback () {
-      loadComments(photo.comments.length, commentShownCount, photo, queriedElements[2]);
-    }
-    loadCommentsBtn.addEventListener('click', loadCommentsCallback, {once: true});
+    const loadCommentsCallback = () => loadComments(photo.comments.length, commentShownCount, photo, queriedElements[2]);
+    loadCommentsBtn.addEventListener('click', loadCommentsCallback);
   }
 };
 
