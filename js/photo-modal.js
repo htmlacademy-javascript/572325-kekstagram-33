@@ -53,8 +53,8 @@ const loadComments = (total, shown, photoObj, shownCountElem) => {
 };
 
 const openPhotoModal = (evt) => {
-  evt.preventDefault();
   if (evt.target.closest('.picture')) {
+    evt.preventDefault();
     const target = evt.target.closest('.picture');
     bigPict.classList.remove('hidden');
     bigPict.querySelector('.big-picture__img img').src = target.href;
