@@ -44,24 +44,30 @@ const pristine = new Pristine(imgUploadForm, {
 const regexp = /^#[a-zа-яё0-9]{1,19}$/i;
 
 const hashtagInput = imgUploadForm.querySelector('.text__hashtags');
+const descriptionField = imgUploadForm.querySelector('.text__description');
 const uploadSubmitBtn = imgUploadForm.querySelector('#upload-submit');
 const MAX_HASHTAG_AMOUNT = 5;
+const MAX_SYMBOLS_AMOUNT = 140;
 let pristineErrorMsg;
 
-const isHashtagValid = (array) => array.every((hashtag) => {
+const isHashtagValid = (array) => {
   pristineErrorMsg = 'Невалидный хэштег';
-  return regexp.test(hashtag);
-});
+  return array.every((hashtag) => regexp.test(hashtag));
+};
 
-const isHashtagDuplicate = (array) => !array.every((hashtag, i) => {
+const isHashtagDuplicate = (array) => {
   pristineErrorMsg = 'Хэштеги не должны повторяться';
-  return array.includes(hashtag, i + 1);
-});
+  return array.filter((hashtag, i) => array.indexOf(hashtag) !== i).length;
+};
+
+const isAmountLessThan5 = (array) => {
+  pristineErrorMsg = 'Количество хэштегов превышает допустимое';
+  return array.length <= MAX_HASHTAG_AMOUNT;
+};
 
 const validateHashtags = (value) => {
-  const hashtags = value.split(' ');
-  console.log(isHashtagDuplicate(hashtags));
-  if (isHashtagValid(hashtags) && isHashtagDuplicate(hashtags)) {
+  const hashtags = value.toLowerCase().trim().split(' ');
+  if (!hashtags[0] || (isHashtagValid(hashtags) && !isHashtagDuplicate(hashtags) && isAmountLessThan5(hashtags))) {
     uploadSubmitBtn.removeAttribute('disabled');
     return true;
   }
@@ -70,32 +76,8 @@ const validateHashtags = (value) => {
 };
 
 pristine.addValidator(hashtagInput, validateHashtags, () => pristineErrorMsg);
-
-// const isHashtagValid = (hashtag) => regexp.test(hashtag);
-// const isHashtagDuplicate = (hashtags) =>
-// const validateHashtags = (callback, hashtags) => {
-//   hashtags.split(' ').forEach((hashtag) => {
-//     if (callback(hashtag)) {
-//       uploadSubmitBtn.removeAttribute('disabled');
-//       return true;
-//     }
-//     console.log(callback(hashtag));
-//     uploadSubmitBtn.setAttribute('disabled', '');
-//     return false;
-//   });
-// };
-
-// pristine.addValidator(hashtagInput, (value) => {
-//   validateHashtags(regexp.test, value);
-// }, 'Введён невалидный хэштег');
+pristine.addValidator(descriptionField, (value) => value.length !== MAX_SYMBOLS_AMOUNT, `Максимальное количество символов - ${MAX_SYMBOLS_AMOUNT}`);
 
 imgUploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
-
-  const isValid = pristine.validate();
-  if (isValid) {
-    //console.log('Можно отправлять');
-  } else {
-    //console.log('Форма невалидна');
-  }
 });
