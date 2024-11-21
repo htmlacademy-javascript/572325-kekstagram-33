@@ -46,17 +46,22 @@ const regexp = /^#[a-zа-яё0-9]{1,19}$/i;
 const hashtagInput = imgUploadForm.querySelector('.text__hashtags');
 const uploadSubmitBtn = imgUploadForm.querySelector('#upload-submit');
 const MAX_HASHTAG_AMOUNT = 5;
+let pristineErrorMsg;
 
 const isHashtagValid = (array) => array.every((hashtag) => {
-  regexp.test(hashtag);
-  console.log(regexp.test(hashtag));
+  pristineErrorMsg = 'Невалидный хэштег';
+  return regexp.test(hashtag);
+});
+
+const isHashtagDuplicate = (array) => !array.every((hashtag, i) => {
+  pristineErrorMsg = 'Хэштеги не должны повторяться';
+  return array.includes(hashtag, i + 1);
 });
 
 const validateHashtags = (value) => {
   const hashtags = value.split(' ');
-  console.log(isHashtagValid(hashtags));
-  if (isHashtagValid(hashtags)) {
-    //console.log('ok');
+  console.log(isHashtagDuplicate(hashtags));
+  if (isHashtagValid(hashtags) && isHashtagDuplicate(hashtags)) {
     uploadSubmitBtn.removeAttribute('disabled');
     return true;
   }
@@ -64,7 +69,7 @@ const validateHashtags = (value) => {
   return false;
 };
 
-pristine.addValidator(hashtagInput, validateHashtags, 'Невалидный хэштег');
+pristine.addValidator(hashtagInput, validateHashtags, () => pristineErrorMsg);
 
 // const isHashtagValid = (hashtag) => regexp.test(hashtag);
 // const isHashtagDuplicate = (hashtags) =>
