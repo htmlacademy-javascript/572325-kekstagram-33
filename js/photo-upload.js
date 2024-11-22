@@ -82,3 +82,5 @@ pristine.addValidator(descriptionField, (value) => value.length !== MAX_SYMBOLS_
 imgUploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
 });
+
+export{imgUploadOverlay, imgPreview, imgEffectsPreview};

@@ -26,7 +26,7 @@ const createPhotoItem = () => {
   return {
     id: currentPhotoId,
     url: `photos/${currentPhotoId}.jpg`,
-    description: 'Здесь должно быть описание',
+    description: 'Превосходный снимок с новой камеры!',
     likes: getRandomNumber(15, 200),
     comments: Array.from({length: getRandomNumber(0, 30)}, getComment)
   };
