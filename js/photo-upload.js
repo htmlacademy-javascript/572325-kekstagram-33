@@ -61,14 +61,14 @@ const isHashtagDuplicate = (array) => {
   return array.filter((hashtag, i) => array.indexOf(hashtag) !== i).length;
 };
 
-const isAmountLessThan5 = (array) => {
+const isAllowedHashtagsAmount = (array) => {
   pristineErrorMsg = 'Количество хэштегов превышает допустимое';
   return array.length <= MAX_HASHTAG_AMOUNT;
 };
 
 const validateHashtags = (value) => {
   const hashtags = value.toLowerCase().trim().split(' ');
-  if (!hashtags[0] || (isHashtagValid(hashtags) && !isHashtagDuplicate(hashtags) && isAmountLessThan5(hashtags))) {
+  if (!hashtags[0] || (isHashtagValid(hashtags) && !isHashtagDuplicate(hashtags) && isAllowedHashtagsAmount(hashtags))) {
     uploadSubmitBtn.removeAttribute('disabled');
     return true;
   }
