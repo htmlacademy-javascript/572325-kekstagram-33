@@ -1,21 +1,24 @@
 import {miniPicturesContainer} from './thumbnails.js';
 import {isEscapeKey} from './util.js';
 
-const imgUploadForm = document.querySelector('#upload-select-image');
 const imgUploadInput = miniPicturesContainer.querySelector('#upload-file');
+const imgUploadForm = document.querySelector('#upload-select-image');
 const imgUploadOverlay = imgUploadForm.querySelector('.img-upload__overlay');
 const imgPreview = imgUploadOverlay.querySelector('.img-upload__preview img');
 const imgEffectsPreview = imgUploadOverlay.querySelectorAll('.effects__preview');
+const hashtagInput = imgUploadForm.querySelector('.text__hashtags');
+const descriptionField = imgUploadForm.querySelector('.text__description');
 
 const closeUploadModal = () => {
   imgUploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
+  imgUploadForm.reset();
 };
 
 imgUploadOverlay.querySelector('#upload-cancel').addEventListener('click', closeUploadModal);
 
 const onDocumentKeydown = (event) => {
-  if (isEscapeKey(event)) {
+  if (isEscapeKey(event) && [hashtagInput, descriptionField].every((elem) => event.target !== elem)) {
     event.preventDefault();
     closeUploadModal();
   }
@@ -43,8 +46,6 @@ const pristine = new Pristine(imgUploadForm, {
 
 const regexp = /^#[a-zа-яё0-9]{1,19}$/i;
 
-const hashtagInput = imgUploadForm.querySelector('.text__hashtags');
-const descriptionField = imgUploadForm.querySelector('.text__description');
 const uploadSubmitBtn = imgUploadForm.querySelector('#upload-submit');
 const MAX_HASHTAG_AMOUNT = 5;
 const MAX_SYMBOLS_AMOUNT = 140;
