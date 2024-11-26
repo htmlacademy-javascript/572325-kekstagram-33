@@ -5,7 +5,7 @@ const imgUploadInput = miniPicturesContainer.querySelector('#upload-file');
 const imgUploadForm = document.querySelector('#upload-select-image');
 const imgUploadOverlay = imgUploadForm.querySelector('.img-upload__overlay');
 const imgPreview = imgUploadOverlay.querySelector('.img-upload__preview img');
-const imgEffectsPreview = imgUploadOverlay.querySelectorAll('.effects__preview');
+const imgPreviewEffects = imgUploadOverlay.querySelectorAll('.effects__preview');
 const hashtagInput = imgUploadForm.querySelector('.text__hashtags');
 const descriptionField = imgUploadForm.querySelector('.text__description');
 
@@ -28,7 +28,7 @@ const openUploadModal = () => {
   imgUploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
   imgPreview.src = URL.createObjectURL(imgUploadInput.files[0]);
-  imgEffectsPreview.forEach((v) => {
+  imgPreviewEffects.forEach((v) => {
     v.style.backgroundImage = `url(${imgPreview.src})`;
   });
   document.addEventListener('keydown', onDocumentKeydown);
@@ -83,4 +83,4 @@ imgUploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
 });
 
-export{imgUploadOverlay, imgPreview, imgEffectsPreview};
+export{imgUploadOverlay, imgPreview, imgPreviewEffects};
