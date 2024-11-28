@@ -1,5 +1,6 @@
 import {miniPicturesContainer} from './thumbnails.js';
-import {isEscapeKey} from './util.js';
+import {isEscapeKey, showAlert} from './util.js';
+import {sendData} from './network.js';
 
 const imgUploadInput = miniPicturesContainer.querySelector('#upload-file');
 const imgUploadForm = document.querySelector('#upload-select-image');
@@ -13,6 +14,8 @@ const closeUploadModal = () => {
   imgUploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   imgUploadForm.reset();
+  imgPreview.style.transform = 'scale(1)';
+  imgPreview.style.filter = 'none';
 };
 
 imgUploadOverlay.querySelector('#upload-cancel').addEventListener('click', closeUploadModal);
@@ -69,10 +72,10 @@ const isAllowedHashtagsAmount = (array) => {
 const validateHashtags = (value) => {
   const hashtags = value.toLowerCase().trim().split(' ');
   if (!hashtags[0] || (isHashtagValid(hashtags) && !isHashtagDuplicate(hashtags) && isAllowedHashtagsAmount(hashtags))) {
-    uploadSubmitBtn.removeAttribute('disabled');
+    uploadSubmitBtn.disabled = false;
     return true;
   }
-  uploadSubmitBtn.setAttribute('disabled', '');
+  uploadSubmitBtn.disabled = true;
   return false;
 };
 
@@ -81,6 +84,13 @@ pristine.addValidator(descriptionField, (value) => value.length !== MAX_SYMBOLS_
 
 imgUploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
+  const formData = new FormData(evt.target);
+  uploadSubmitBtn.disabled = true;
+  sendData(formData).then(closeUploadModal).catch((err) => {
+    showAlert(err.message);
+  }).finally(() => {
+    uploadSubmitBtn.disabled = false;
+  });
 });
 
 export{imgUploadOverlay, imgPreview, imgPreviewEffects};

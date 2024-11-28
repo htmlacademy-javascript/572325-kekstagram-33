@@ -7,10 +7,10 @@ const MAX_SCALE_VALUE = 100;
 const SCALE_STEP = 25;
 
 const scaleControlValue = imgUploadOverlay.querySelector('.scale__control--value');
-let currentScaleValue = Number(scaleControlValue.value.slice(0, -1));
 const scaleButtons = ['.scale__control--smaller', '.scale__control--bigger'].map((elem) => imgUploadOverlay.querySelector(elem));
 
 const changeScale = (evt) => {
+  let currentScaleValue = Number(scaleControlValue.value.slice(0, -1));
   if (evt.target === scaleButtons[0] && currentScaleValue > MIN_SCALE_VALUE) {
     currentScaleValue -= SCALE_STEP;
   } else if (evt.target === scaleButtons[1] && currentScaleValue < MAX_SCALE_VALUE) {
@@ -24,6 +24,7 @@ scaleButtons.forEach((elem) => elem.addEventListener('click', changeScale));
 
 //эффекты
 
+const sliderInput = imgUploadOverlay.querySelector('.effect-level__value');
 const sliderElem = imgUploadOverlay.querySelector('.effect-level__slider');
 const effectsRadioInputs = imgUploadOverlay.querySelectorAll('.effects__radio:not([value="none"])');
 
@@ -56,9 +57,9 @@ effectsRadioInputs.forEach((elem, i) => {
       step: EFFECTS_DATA[i][3],
     });
     sliderElem.noUiSlider.on('update', () => {
-      elem.value = sliderElem.noUiSlider.get();
+      sliderInput.value = sliderElem.noUiSlider.get();
       const unit = EFFECTS_DATA[i][4] || '';
-      imgPreview.style.filter = `${EFFECTS_DATA[i][0]}(${elem.value}${unit})`;
+      imgPreview.style.filter = `${EFFECTS_DATA[i][0]}(${sliderInput.value}${unit})`;
     });
   });
 });
