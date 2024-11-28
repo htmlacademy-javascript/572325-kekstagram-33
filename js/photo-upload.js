@@ -5,7 +5,7 @@ const imgUploadInput = miniPicturesContainer.querySelector('#upload-file');
 const imgUploadForm = document.querySelector('#upload-select-image');
 const imgUploadOverlay = imgUploadForm.querySelector('.img-upload__overlay');
 const imgPreview = imgUploadOverlay.querySelector('.img-upload__preview img');
-const imgEffectsPreview = imgUploadOverlay.querySelectorAll('.effects__preview');
+const imgPreviewEffects = imgUploadOverlay.querySelectorAll('.effects__preview');
 const hashtagInput = imgUploadForm.querySelector('.text__hashtags');
 const descriptionField = imgUploadForm.querySelector('.text__description');
 
@@ -28,7 +28,7 @@ const openUploadModal = () => {
   imgUploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
   imgPreview.src = URL.createObjectURL(imgUploadInput.files[0]);
-  imgEffectsPreview.forEach((v) => {
+  imgPreviewEffects.forEach((v) => {
     v.style.backgroundImage = `url(${imgPreview.src})`;
   });
   document.addEventListener('keydown', onDocumentKeydown);
@@ -61,14 +61,14 @@ const isHashtagDuplicate = (array) => {
   return array.filter((hashtag, i) => array.indexOf(hashtag) !== i).length;
 };
 
-const isAmountLessThan5 = (array) => {
+const isAllowedHashtagsAmount = (array) => {
   pristineErrorMsg = 'Количество хэштегов превышает допустимое';
   return array.length <= MAX_HASHTAG_AMOUNT;
 };
 
 const validateHashtags = (value) => {
   const hashtags = value.toLowerCase().trim().split(' ');
-  if (!hashtags[0] || (isHashtagValid(hashtags) && !isHashtagDuplicate(hashtags) && isAmountLessThan5(hashtags))) {
+  if (!hashtags[0] || (isHashtagValid(hashtags) && !isHashtagDuplicate(hashtags) && isAllowedHashtagsAmount(hashtags))) {
     uploadSubmitBtn.removeAttribute('disabled');
     return true;
   }
@@ -82,3 +82,5 @@ pristine.addValidator(descriptionField, (value) => value.length !== MAX_SYMBOLS_
 imgUploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
 });
+
+export{imgUploadOverlay, imgPreview, imgPreviewEffects};

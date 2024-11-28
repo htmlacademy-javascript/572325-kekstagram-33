@@ -566,6 +566,10 @@ main {
   display: none;
 }
 
+div:has(+ .effects input[value="none"]:checked) > .effect-level {
+  display: none;
+}
+
 
 /**
  * Блок с эффектами, которые можно применить к изображению
