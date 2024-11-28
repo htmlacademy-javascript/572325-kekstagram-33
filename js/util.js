@@ -1,3 +1,5 @@
+const ALERT_SHOW_TIME = 5000;
+
 const getRandomNumber = (min, max) => {
   if (min > max) {
     [min, max] = [max, min];
@@ -14,4 +16,12 @@ const idGenerator = () => {
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-export {getRandomNumber, getRandomArrayElem, idGenerator, isEscapeKey};
+const showAlert = () => {
+  const templateDataError = document.querySelector('#data-error').content;
+  document.body.append(templateDataError);
+  setTimeout(() => {
+    document.body.querySelector('.data-error').remove();
+  }, ALERT_SHOW_TIME);
+};
+
+export {getRandomNumber, getRandomArrayElem, idGenerator, isEscapeKey, showAlert};

@@ -57,7 +57,7 @@ effectsRadioInputs.forEach((elem, i) => {
     });
     sliderElem.noUiSlider.on('update', () => {
       elem.value = sliderElem.noUiSlider.get();
-      const unit = (EFFECTS_DATA[i][4]) ? EFFECTS_DATA[i][4] : '';
+      const unit = EFFECTS_DATA[i][4] || '';
       imgPreview.style.filter = `${EFFECTS_DATA[i][0]}(${elem.value}${unit})`;
     });
   });
