@@ -3,11 +3,8 @@ import {showAlert} from './util.js';
 
 const templateMiniPicture = document.querySelector('#picture').content;
 const miniPicturesContainer = document.querySelector('.pictures');
-let photosData;
-//const PHOTOS_COUNT = 25;
 
 const renderThumbnails = (data) => {
-  photosData = data;
   data.forEach(({url, description, likes, comments}) => {
     const miniPictureItem = templateMiniPicture.querySelector('.picture').cloneNode(true);
     if (miniPictureItem.children.length > 0) {
@@ -21,8 +18,9 @@ const renderThumbnails = (data) => {
   });
 };
 
-getData().then((photosArray) => {
+const photosData = await getData().then((photosArray) => {
   renderThumbnails(photosArray);
+  return photosArray;
 }).catch(() => {
   showAlert();
 });
