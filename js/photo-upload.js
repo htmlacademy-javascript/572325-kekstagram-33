@@ -1,5 +1,5 @@
 import {miniPicturesContainer} from './thumbnails.js';
-import {isEscapeKey, showAlert} from './util.js';
+import {isEscapeKey} from './util.js';
 import {sendData} from './network.js';
 
 const imgUploadInput = miniPicturesContainer.querySelector('#upload-file');
@@ -9,6 +9,7 @@ const imgPreview = imgUploadOverlay.querySelector('.img-upload__preview img');
 const imgPreviewEffects = imgUploadOverlay.querySelectorAll('.effects__preview');
 const hashtagInput = imgUploadForm.querySelector('.text__hashtags');
 const descriptionField = imgUploadForm.querySelector('.text__description');
+let messageElem;
 
 const closeUploadModal = () => {
   imgUploadOverlay.classList.add('hidden');
@@ -21,7 +22,7 @@ const closeUploadModal = () => {
 imgUploadOverlay.querySelector('#upload-cancel').addEventListener('click', closeUploadModal);
 
 const onDocumentKeydown = (event) => {
-  if (isEscapeKey(event) && [hashtagInput, descriptionField].every((elem) => event.target !== elem)) {
+  if (isEscapeKey(event) && [hashtagInput, descriptionField].every((elem) => event.target !== elem) && !messageElem) {
     event.preventDefault();
     closeUploadModal();
   }
@@ -82,12 +83,33 @@ const validateHashtags = (value) => {
 pristine.addValidator(hashtagInput, validateHashtags, () => pristineErrorMsg);
 pristine.addValidator(descriptionField, (value) => value.length !== MAX_SYMBOLS_AMOUNT, `Максимальное количество символов - ${MAX_SYMBOLS_AMOUNT}`);
 
+const onMessageEscape = (e) => {
+  if (isEscapeKey(e)) {
+    e.preventDefault();
+    messageElem.remove();
+    messageElem = '';
+  }
+};
+
+const showMessage = (type) => {
+  const template = document.querySelector(`#${type}`).content;
+  messageElem = template.querySelector(`.${type}`).cloneNode(true);
+  document.body.append(messageElem);
+  const messageBtn = messageElem.querySelector(`.${type}__button`);
+  messageElem.addEventListener('click', (event) => {
+    if (event.target === messageElem || event.target === messageBtn) {
+      messageElem.remove();
+    }
+  });
+  document.addEventListener('keydown', onMessageEscape);
+};
+
 imgUploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
   const formData = new FormData(evt.target);
   uploadSubmitBtn.disabled = true;
-  sendData(formData).then(closeUploadModal).catch((err) => {
-    showAlert(err.message);
+  sendData(formData).then(closeUploadModal).then(() => showMessage('success')).catch(() => {
+    showMessage('error');
   }).finally(() => {
     uploadSubmitBtn.disabled = false;
   });
