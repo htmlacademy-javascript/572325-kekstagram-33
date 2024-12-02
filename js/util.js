@@ -1,5 +1,14 @@
 const ALERT_SHOW_TIME = 5000;
 
+const getRandomNumber = (min, max) => {
+  if (min > max) {
+    [min, max] = [max, min];
+  }
+  return Math.floor(Math.random() * (max + 1 - min) + min);
+};
+
+const getRandomArrayElem = (arr) => arr[getRandomNumber(0, arr.length - 1)];
+
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
 const showAlert = () => {
@@ -10,4 +19,12 @@ const showAlert = () => {
   }, ALERT_SHOW_TIME);
 };
 
-export {isEscapeKey, showAlert};
+const debounce = (callback, timeoutDelay) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
+export {getRandomNumber, getRandomArrayElem, isEscapeKey, showAlert, debounce};
