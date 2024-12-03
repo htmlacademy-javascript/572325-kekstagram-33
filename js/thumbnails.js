@@ -6,7 +6,7 @@ const miniPicturesContainer = document.querySelector('.pictures');
 const imgFilters = document.querySelector('.img-filters');
 const imgFilterButtons = imgFilters.querySelectorAll('.img-filters__button');
 const RANDOM_PHOTOS_AMOUNT = 10;
-const RERENDER_DELAY = 500;
+const RERENDER_DELAY = 1000;
 
 const renderThumbnails = (data) => {
   data.forEach(({url, description, likes, comments}) => {
@@ -32,24 +32,46 @@ const getRandomPhotos = (response) => {
   return randomPhotos;
 };
 
-const setImgFilterButtons = (cb) => {
-  imgFilterButtons.forEach((btn) => btn.addEventListener('click', () => {
-    miniPicturesContainer.querySelectorAll('.picture').forEach((elem) => {
-      elem.remove();
-    });
-    if (btn.id.endsWith('random')) {
-      cb();
-    }
-  }));
-};
-
 const photosData = await getData().then((photosArray) => {
   renderThumbnails(photosArray);
   imgFilters.classList.remove('img-filters--inactive');
-  setImgFilterButtons(debounce(() => renderThumbnails(getRandomPhotos(photosArray.slice())), RERENDER_DELAY));
+  imgFilterButtons.forEach((btn) => btn.addEventListener('click', () => {
+    let arrayToRender = photosArray;
+    if (btn.id.endsWith('random')) {
+      arrayToRender = getRandomPhotos(photosArray.slice());
+    }
+    (debounce(() => {
+      miniPicturesContainer.querySelectorAll('.picture').forEach((elem) => {
+        elem.remove();
+      });
+      renderThumbnails(arrayToRender);
+    }, RERENDER_DELAY))();
+  }));
   return photosArray;
 }).catch(() => {
   showAlert();
 });
 
 export {miniPicturesContainer, photosData};
+
+//другой вариант
+
+// const setImgFilterButtons = (cb) => {
+//   imgFilterButtons.forEach((btn) => btn.addEventListener('click', () => {
+//     miniPicturesContainer.querySelectorAll('.picture').forEach((elem) => {
+//       elem.remove();
+//     });
+//     if (btn.id.endsWith('random')) {
+//       cb();
+//     }
+//   }));
+// };
+
+// const photosData = await getData().then((photosArray) => {
+//   renderThumbnails(photosArray);
+//   imgFilters.classList.remove('img-filters--inactive');
+//   setImgFilterButtons(debounce(() => renderThumbnails(getRandomPhotos(photosArray.slice())), RERENDER_DELAY));
+//   return photosArray;
+// }).catch(() => {
+//   showAlert();
+// });
