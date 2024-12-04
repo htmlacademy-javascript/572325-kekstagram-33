@@ -6,7 +6,7 @@ const miniPicturesContainer = document.querySelector('.pictures');
 const imgFilters = document.querySelector('.img-filters');
 const imgFilterButtons = imgFilters.querySelectorAll('.img-filters__button');
 const RANDOM_PHOTOS_AMOUNT = 10;
-const RERENDER_DELAY = 1000;
+const RERENDER_DELAY = 500;
 
 const renderThumbnails = (data) => {
   data.forEach(({url, description, likes, comments}) => {
@@ -32,20 +32,33 @@ const getRandomPhotos = (response) => {
   return randomPhotos;
 };
 
+const compareCommentsAmount = (objectA, objectB) => objectB.comments.length - objectA.comments.length;
+
+const getSortedByComments = (response) => response.sort(compareCommentsAmount);
+
 const photosData = await getData().then((photosArray) => {
   renderThumbnails(photosArray);
   imgFilters.classList.remove('img-filters--inactive');
+  let activeImgFilter = imgFilters.querySelector('.img-filters__button--active');
+  let arrayToRender;
+  const callDebounce = debounce(() => {
+    miniPicturesContainer.querySelectorAll('.picture').forEach((elem) => {
+      elem.remove();
+    });
+    renderThumbnails(arrayToRender);
+  }, RERENDER_DELAY);
   imgFilterButtons.forEach((btn) => btn.addEventListener('click', () => {
-    let arrayToRender = photosArray;
+    activeImgFilter.classList.remove('img-filters__button--active');
+    btn.classList.add('img-filters__button--active');
+    activeImgFilter = btn;
+    arrayToRender = photosArray;
     if (btn.id.endsWith('random')) {
       arrayToRender = getRandomPhotos(photosArray.slice());
     }
-    (debounce(() => {
-      miniPicturesContainer.querySelectorAll('.picture').forEach((elem) => {
-        elem.remove();
-      });
-      renderThumbnails(arrayToRender);
-    }, RERENDER_DELAY))();
+    if (btn.id.endsWith('discussed')) {
+      arrayToRender = getSortedByComments(photosArray.slice());
+    }
+    callDebounce();
   }));
   return photosArray;
 }).catch(() => {
@@ -53,25 +66,3 @@ const photosData = await getData().then((photosArray) => {
 });
 
 export {miniPicturesContainer, photosData};
-
-//другой вариант
-
-// const setImgFilterButtons = (cb) => {
-//   imgFilterButtons.forEach((btn) => btn.addEventListener('click', () => {
-//     miniPicturesContainer.querySelectorAll('.picture').forEach((elem) => {
-//       elem.remove();
-//     });
-//     if (btn.id.endsWith('random')) {
-//       cb();
-//     }
-//   }));
-// };
-
-// const photosData = await getData().then((photosArray) => {
-//   renderThumbnails(photosArray);
-//   imgFilters.classList.remove('img-filters--inactive');
-//   setImgFilterButtons(debounce(() => renderThumbnails(getRandomPhotos(photosArray.slice())), RERENDER_DELAY));
-//   return photosArray;
-// }).catch(() => {
-//   showAlert();
-// });
