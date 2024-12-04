@@ -88,6 +88,7 @@ const onMessageEscape = (e) => {
     e.preventDefault();
     messageElem.remove();
     messageElem = '';
+    document.removeEventListener('keydown', onMessageEscape);
   }
 };
 
