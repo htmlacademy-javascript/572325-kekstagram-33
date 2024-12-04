@@ -28,13 +28,20 @@ const onDocumentKeydown = (event) => {
   }
 };
 
+const checkUploadedFile = () => {
+  const FILE_TYPES = ['jpg', 'jpeg', 'png'];
+  return FILE_TYPES.some((it) => imgUploadInput.files[0].name.toLowerCase.endsWith(it));
+};
+
 const openUploadModal = () => {
   imgUploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
-  imgPreview.src = URL.createObjectURL(imgUploadInput.files[0]);
-  imgPreviewEffects.forEach((v) => {
-    v.style.backgroundImage = `url(${imgPreview.src})`;
-  });
+  if (checkUploadedFile) {
+    imgPreview.src = URL.createObjectURL(imgUploadInput.files[0]);
+    imgPreviewEffects.forEach((v) => {
+      v.style.backgroundImage = `url(${imgPreview.src})`;
+    });
+  }
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
