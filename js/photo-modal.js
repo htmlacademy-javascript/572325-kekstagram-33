@@ -56,10 +56,10 @@ const openPhotoModal = (evt) => {
     evt.preventDefault();
     const target = evt.target.closest('.picture');
     bigPict.classList.remove('hidden');
-    bigPict.querySelector('.big-picture__img img').src = target.href;
     const indexForSlice = target.href.lastIndexOf('/') + 1;
     const id = target.href.slice(indexForSlice, -4);
     photoObj = photosData[id - 1];
+    bigPict.querySelector('.big-picture__img img').src = photoObj.url;
     comments = photoObj.comments;
     commentShownCount = (comments.length < COMMENTS_LIMIT) ? comments.length : COMMENTS_LIMIT;
     hideCommentsLoader();
