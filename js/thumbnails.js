@@ -36,9 +36,7 @@ const compareCommentsAmount = (objectA, objectB) => objectB.comments.length - ob
 
 const getSortedByComments = (response) => response.sort(compareCommentsAmount);
 
-const photosData = await getData().then((photosArray) => {
-  renderThumbnails(photosArray);
-  imgFilters.classList.remove('img-filters--inactive');
+const setImgFilters = (response) => {
   let activeImgFilter = imgFilters.querySelector('.img-filters__button--active');
   let arrayToRender;
   const callDebounce = debounce(() => {
@@ -51,15 +49,21 @@ const photosData = await getData().then((photosArray) => {
     activeImgFilter.classList.remove('img-filters__button--active');
     btn.classList.add('img-filters__button--active');
     activeImgFilter = btn;
-    arrayToRender = photosArray;
+    arrayToRender = response;
     if (btn.id.endsWith('random')) {
-      arrayToRender = getRandomPhotos(photosArray.slice());
+      arrayToRender = getRandomPhotos(response.slice());
     }
     if (btn.id.endsWith('discussed')) {
-      arrayToRender = getSortedByComments(photosArray.slice());
+      arrayToRender = getSortedByComments(response.slice());
     }
     callDebounce();
   }));
+};
+
+const photosData = await getData().then((photosArray) => {
+  renderThumbnails(photosArray);
+  imgFilters.classList.remove('img-filters--inactive');
+  setImgFilters(photosArray);
   return photosArray;
 }).catch(() => {
   showAlert();

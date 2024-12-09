@@ -28,13 +28,13 @@ const sliderInput = imgUploadOverlay.querySelector('.effect-level__value');
 const sliderElem = imgUploadOverlay.querySelector('.effect-level__slider');
 const effectsRadioInputs = imgUploadOverlay.querySelectorAll('.effects__radio:not([value="none"])');
 
-const EFFECTS_DATA = [
-  ['grayscale', 0, 1, 0.1],
-  ['sepia', 0, 1, 0.1],
-  ['invert', 0, 100, 1, '%'],
-  ['blur', 0, 3, 0.1, 'px'],
-  ['brightness', 1, 3, 0.1]
-];
+const EFFECTS_DATA = {
+  effectNames: ['grayscale', 'sepia', 'invert', 'blur', 'brightness'],
+  minValues: [0, 0, 0, 0, 1],
+  maxValues: [1, 1, 100, 3, 3],
+  steps: [0.1, 0.1, 1, 0.1, 0.1],
+  units: ['', '', '%', 'px', '']
+};
 
 noUiSlider.create(sliderElem, {
   range: {
@@ -50,16 +50,15 @@ effectsRadioInputs.forEach((elem, i) => {
   elem.addEventListener('change', () => {
     sliderElem.noUiSlider.updateOptions({
       range: {
-        min: EFFECTS_DATA[i][1],
-        max: EFFECTS_DATA[i][2],
+        min: EFFECTS_DATA.minValues[i],
+        max: EFFECTS_DATA.maxValues[i],
       },
-      start: EFFECTS_DATA[i][1],
-      step: EFFECTS_DATA[i][3],
+      start: EFFECTS_DATA.minValues[i],
+      step: EFFECTS_DATA.steps[i],
     });
     sliderElem.noUiSlider.on('update', () => {
       sliderInput.value = sliderElem.noUiSlider.get();
-      const unit = EFFECTS_DATA[i][4] || '';
-      imgPreview.style.filter = `${EFFECTS_DATA[i][0]}(${sliderInput.value}${unit})`;
+      imgPreview.style.filter = `${EFFECTS_DATA.effectNames[i]}(${sliderInput.value}${EFFECTS_DATA.units[i]})`;
     });
   });
 });
