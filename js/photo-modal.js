@@ -54,10 +54,9 @@ const loadComments = () => {
 const openPhotoModal = (evt) => {
   if (evt.target.closest('.picture')) {
     evt.preventDefault();
-    const target = evt.target.closest('.picture');
     bigPict.classList.remove('hidden');
-    const indexForSlice = target.href.lastIndexOf('/') + 1;
-    const id = target.href.slice(indexForSlice, -4);
+    const imgUrl = evt.target.closest('.picture').href;
+    const id = imgUrl.slice(imgUrl.lastIndexOf('/') + 1, imgUrl.lastIndexOf('.'));
     photoObj = photosData[id - 1];
     bigPict.querySelector('.big-picture__img img').src = photoObj.url;
     comments = photoObj.comments;
